@@ -1,40 +1,45 @@
 package Bankomat.Controller;
 
-import Bankomat.Model.Database;
-import Bankomat.Model.Main;
+import Bankomat.Database.Repository;
+import Bankomat.Main;
 import Bankomat.Model.Client;
 import Bankomat.View.LoginScene;
 
+import javax.swing.*; // J Catch för en JOPTIONPANE.
+
 public class LoginSceneController {
     private String personNr;
-    private String PIN;
+    private int PIN;
     private LoginScene loginScene;
-    private Database database;
     private Main main;
-    private Client client;
-    private boolean isClient = false;
+    private Repository rep;
 
 
-    public LoginSceneController(LoginScene loginScene, Main main, Database database, Client client) {
+    public LoginSceneController(LoginScene loginScene, Main main) {
         this.loginScene = loginScene;
         this.main = main;
-        this.database = database;
-        this.client = client;
+        this.rep = new Repository();
     }
 
     public void start() {
         loginScene.setUp();
 
         loginScene.getLoginButton().setOnAction(actionEvent -> {
-            personNr = loginScene.getNameField().getText();
-            PIN = loginScene.getPasswdField().getText();
-
-            // kod för att hantera inloggning här, t.ex matcha personNr mot pin-kod
-
-            if(isClient) {
-                main.goToBankomatScene();
-                // byter scen till bankomaten för uttag, ändra isClient till true för att se nästa scen.
+            try {
+                personNr = loginScene.getNameField().getText();
+                PIN = Integer.parseInt(loginScene.getPasswdField().getText());
+                System.out.println(personNr + " % " + PIN);
+                Client client = rep.getClient(personNr, PIN);
+                if(client != null) {
+                    main.goToBankomatScene(client);
+                }
+                System.out.println("Loginscene " + client.getID());
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "PersonNr + PIN (HELTAL)"); // ändra
             }
+
+
+
         });
 
     }

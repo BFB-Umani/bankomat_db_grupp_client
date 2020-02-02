@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/bankomat_db_grupp.iml" filepath="$PROJECT_DIR$/bankomat_db_grupp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/bankomat_db_grupp_clients.iml" filepath="$PROJECT_DIR$/.idea/bankomat_db_grupp_clients.iml" />
     </modules>
   </component>
 </project>

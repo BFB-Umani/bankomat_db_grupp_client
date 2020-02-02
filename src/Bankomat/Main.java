@@ -1,7 +1,9 @@
-package Bankomat.Model;
+package Bankomat;
 
 import Bankomat.Controller.BankomatSceneController;
 import Bankomat.Controller.LoginSceneController;
+import Bankomat.Database.Repository;
+import Bankomat.Model.Client;
 import Bankomat.View.BankomatScene;
 import Bankomat.View.LoginScene;
 import javafx.application.Application;
@@ -13,8 +15,7 @@ public class Main extends Application {
     private Scene scene;
     private LoginScene loginScene;
     private BankomatScene bankomatScene;
-    private Client client = new Client();
-    private Database db = new Database();
+    private Client client;
     public Stage stage = new Stage();
 
     public void start(Stage stage) {
@@ -24,15 +25,15 @@ public class Main extends Application {
         loginScene = new LoginScene();
         bankomatScene = new BankomatScene();
 
+        Repository rep = new Repository();
+
         scene = new Scene(loginScene.getDesignLayout(),480,620);
         scene.getStylesheets().add(Main.class.getResource("Style.css").toExternalForm());
         stage.setScene(scene);
 
-        LoginSceneController loginSceneController = new LoginSceneController(loginScene,this, db, client);
+        LoginSceneController loginSceneController = new LoginSceneController(loginScene,this);
         loginSceneController.start();
 
-        BankomatSceneController bankomatSceneController = new BankomatSceneController(bankomatScene,this, db, client);
-        bankomatSceneController.start();
 
         stage.setOnCloseRequest(t -> {
             stage.close();
@@ -46,7 +47,11 @@ public class Main extends Application {
         scene.setRoot(loginScene.getDesignLayout());
     }
 
-    public void goToBankomatScene() {
+    public void goToBankomatScene(Client current) {
+        this.client = current;
+        System.out.println("Main " + client.getID());
+        BankomatSceneController bankomatSceneController = new BankomatSceneController(bankomatScene,this, client);
+        bankomatSceneController.start();
         scene.setRoot(bankomatScene.getDesignLayout());
     }
 

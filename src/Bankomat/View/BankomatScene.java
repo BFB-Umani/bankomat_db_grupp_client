@@ -15,6 +15,7 @@ public class BankomatScene {
     private Label uttag = new Label("Uttag:          ");
     private TextField uttagField = new TextField();
     private Button okButton = new Button("OK");
+    private Button showButton = new Button("Konton"); // J
 
 
 
@@ -27,6 +28,7 @@ public class BankomatScene {
 
         HBox buttonLayout = new HBox();
         buttonLayout.getChildren().add(okButton);
+        buttonLayout.getChildren().add(showButton); // J
         designLayout.getChildren().add(buttonLayout);
 
         bankomat.setPrefSize(300,275);
@@ -45,6 +47,8 @@ public class BankomatScene {
         okButton.setPrefSize(88,45);
         buttonLayout.setId("buttonLayout");
         okButton.setMaxWidth(Double.MAX_VALUE);
+        showButton.setPrefSize(88,45); // J
+        showButton.setMaxWidth(Double.MAX_VALUE); // J
     }
 
 
@@ -59,4 +63,6 @@ public class BankomatScene {
     public Button getOkButton() {
         return okButton;
     }
+
+    public Button getShowButton() {return showButton;} // J
 }
