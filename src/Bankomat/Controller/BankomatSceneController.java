@@ -16,7 +16,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BankomatSceneController {
 
@@ -25,8 +27,6 @@ public class BankomatSceneController {
     private Main main;
     private Client client;
     private Repository rep;
-    private Button ok = new Button("ok");
-    private Label orderLabel = new Label();
 
 
     public BankomatSceneController(BankomatScene bankomatScene, Main main, Client client) {
@@ -37,6 +37,7 @@ public class BankomatSceneController {
     }
 
     public void start() {
+        getAccounts();
         bankomatScene.setUp();
 
         bankomatScene.getOkButton().setOnAction(actionEvent -> {
@@ -52,45 +53,26 @@ public class BankomatSceneController {
 
         // Skriver ut balance i console (vill ha ny ruta FX))
         bankomatScene.getShowButton().setOnAction(actionEvent -> {
-            System.out.println("This is my id " + client.getID());
             List<Account> accountList = rep.getAccounts(client.getID());
-            System.out.println(accountList.size());
-            int count = 0;
-//            for(Account a: accountList) {
-//                System.out.println("Konto " + ++count + " " + a.getBalance());
-//            }
-
-            showBalance();
+            List<Integer> balance;
+            balance = accountList.stream().map(Account::getBalance).collect(Collectors.toList());
+            bankomatScene.showBalance(balance);
         });
+
+        // test
+        bankomatScene.getcBox().setOnAction(l -> {
+            System.out.println("Du valde: " + bankomatScene.getcBox().getValue() + "index " +
+                    bankomatScene.getcBox().getSelectionModel().getSelectedIndex());
+        });
+
+
 
     }
-
-    public void showBalance(){
-        Stage dialogStage = new Stage();
-        VBox layout = new VBox();
-        HBox hBox = new HBox(orderLabel);
-        HBox buttons = new HBox(ok);
-        layout.getChildren().add(hBox);
-        layout.getChildren().add(buttons);
-        layout.setMinSize(400,50);
-        buttons.setAlignment(Pos.BOTTOM_CENTER);
-        buttons.setMinSize(300,60);
-        orderLabel.setAlignment(Pos.CENTER);
-        orderLabel.setText("");
-        hBox.setAlignment(Pos.CENTER);
-        ok.setPrefSize(88,45);
-        buttons.setPadding(new Insets(15, 0, 10, 0));
-        ok.setCursor(Cursor.HAND);
-
-        ok.setOnAction(actionEvent -> {
-            dialogStage.close();
-        });
-
-        dialogStage.setResizable(false);
-        dialogStage.setScene(new Scene(layout));
-        dialogStage.show();
-        dialogStage.setOnCloseRequest(t -> {
-            dialogStage.close();
-        });
+    public void getAccounts() {
+        List<Account> accountList = rep.getAccounts(client.getID());
+        List<Integer> balance;
+        balance = accountList.stream().map(Account::getBalance).collect(Collectors.toList());
+        bankomatScene.setcBox(balance);
     }
 }
+
