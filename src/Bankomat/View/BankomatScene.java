@@ -22,7 +22,7 @@ public class BankomatScene {
     private Label bankomat = new Label("skriv uttag i SEK");
     private HBox nameArea = new HBox();
     private ComboBox<String> cBox = new ComboBox<>();
-    private Label uttag = new Label("Uttag:          ");
+    private Label uttag = new Label("Uttag:                     ");
     private TextField uttagField = new TextField();
     private Button okButton = new Button("OK");
     private Button showButton = new Button("Konton&Lån"); // J
@@ -59,9 +59,9 @@ public class BankomatScene {
         comboBox.setAlignment(Pos.CENTER);
 
 
-        nameArea.setAlignment(Pos.CENTER);
+        nameArea.setAlignment(Pos.CENTER_LEFT);
 
-        nameArea.setPadding(new Insets(10));
+        nameArea.setPadding(new Insets(60));
 
         uttag.setId("nameText");
 
@@ -73,6 +73,8 @@ public class BankomatScene {
         showButton.setMaxWidth(Double.MAX_VALUE); // J
         latestMonth.setPrefSize(88,45); // J
         latestMonth.setMaxWidth(Double.MAX_VALUE); // J
+
+        buttonLayout.setSpacing(10);
     }
 
     public void showHistory(List<String> outputHist) {
