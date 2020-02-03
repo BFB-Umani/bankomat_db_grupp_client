@@ -96,6 +96,10 @@ public class BankomatSceneController {
             bankomatScene.showBalance(balance, loanStringList);
         });
 
+        bankomatScene.getLatestMonth().setOnAction(l -> {
+            bankomatScene.showHistory();
+        });
+
         // test output för combobox
         bankomatScene.getcBox().setOnAction(l -> {
             System.out.println("Du valde: " + bankomatScene.getcBox().getValue() + "index " +

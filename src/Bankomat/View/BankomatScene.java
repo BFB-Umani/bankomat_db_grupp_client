@@ -25,9 +25,11 @@ public class BankomatScene {
     private Label uttag = new Label("Uttag:          ");
     private TextField uttagField = new TextField();
     private Button okButton = new Button("OK");
-    private Button showButton = new Button("Konton"); // J
+    private Button showButton = new Button("Konton&Lån"); // J
+    private Button latestMonth = new Button("Kontohistorik");
     private Button ok = new Button("ok");
     private Label orderLabel = new Label();
+    private Label historyLabel = new Label();
     private Label loanLabel = new Label();
     private HBox comboBox = new HBox();
 
@@ -43,6 +45,7 @@ public class BankomatScene {
         HBox buttonLayout = new HBox();
         buttonLayout.getChildren().add(okButton);
         buttonLayout.getChildren().add(showButton); // J
+        buttonLayout.getChildren().add(latestMonth); // J
         designLayout.getChildren().add(buttonLayout);
 
         bankomat.setPrefSize(300,275);
@@ -68,6 +71,40 @@ public class BankomatScene {
         okButton.setMaxWidth(Double.MAX_VALUE);
         showButton.setPrefSize(88,45); // J
         showButton.setMaxWidth(Double.MAX_VALUE); // J
+        latestMonth.setPrefSize(88,45); // J
+        latestMonth.setMaxWidth(Double.MAX_VALUE); // J
+    }
+
+    public void showHistory() {
+        Stage dialogStage = new Stage();
+        VBox layout = new VBox();
+        HBox hBox = new HBox(historyLabel);
+        HBox buttons = new HBox(ok);
+        layout.getChildren().add(hBox);
+        layout.getChildren().add(buttons);
+        layout.setMinSize(400,50);
+        buttons.setAlignment(Pos.BOTTOM_CENTER);
+        buttons.setMinSize(300,60);
+        orderLabel.setAlignment(Pos.CENTER);
+        loanLabel.setAlignment(Pos.TOP_CENTER);
+
+        historyLabel.setText("Hejsan allihop");
+
+        hBox.setAlignment(Pos.CENTER);
+        ok.setPrefSize(88,45);
+        buttons.setPadding(new Insets(15, 0, 10, 0));
+        ok.setCursor(Cursor.HAND);
+
+        ok.setOnAction(actionEvent -> {
+            dialogStage.close();
+        });
+
+        dialogStage.setResizable(false);
+        dialogStage.setScene(new Scene(layout));
+        dialogStage.show();
+        dialogStage.setOnCloseRequest(t -> {
+            dialogStage.close();
+        });
     }
 
     public void showBalance(List<Integer> balance, List<String> loanList){
@@ -113,8 +150,8 @@ public class BankomatScene {
         });
     }
 
-    // Sätter värdet på combobox (Sämst på JavaFX finns säkert 100 gånger bättre sätt att göra det på)
 
+    // Sätter värdet på combobox (Sämst på JavaFX finns säkert 100 gånger bättre sätt att göra det på)
     public void setcBox(List<Integer> balance, int index) {
         cBox.getItems().clear();
         int count = 0;
@@ -145,4 +182,8 @@ public class BankomatScene {
     }
 
     public Button getShowButton() {return showButton;} // J
+
+    public Button getLatestMonth() {
+        return latestMonth;
+    }
 }
