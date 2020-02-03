@@ -5,6 +5,8 @@ import Bankomat.Main;
 import Bankomat.Model.Account;
 import Bankomat.Model.Client;
 import Bankomat.View.BankomatScene;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -27,6 +29,8 @@ public class BankomatSceneController {
     private Main main;
     private Client client;
     private Repository rep;
+    private List<Account> accountList;
+    private List<Integer> balance;
 
 
     public BankomatSceneController(BankomatScene bankomatScene, Main main, Client client) {
@@ -37,29 +41,47 @@ public class BankomatSceneController {
     }
 
     public void start() {
-        getAccounts();
+        getAccounts(0);
         bankomatScene.setUp();
 
         bankomatScene.getOkButton().setOnAction(actionEvent -> {
             try {
                 uttag = Integer.parseInt(bankomatScene.getUttagField().getText());
+
             }catch(NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, "du måste skriva in ett positivt heltal");
             }
+            catch (IndexOutOfBoundsException e) {
+
+            }
 
             // kod för att ändra summa på konto utifrån kundens uttag
+            int comboIndex = bankomatScene.getcBox().getSelectionModel().getSelectedIndex();
+            int accId = accountList.get(comboIndex).getId();
+            if(accountList.get(comboIndex).getBalance() > uttag) {
+                if (rep.withdrawMoney(accId, uttag)) {
+                    System.out.println("Uttaget lyckades");
+//                    accountList.get(comboIndex).setBalance(accountList.get(comboIndex).getBalance() - uttag);
+                    bankomatScene.getcBox().getItems().clear();
+                    getAccounts(comboIndex);
+                }
+            }
+            else {
+                System.out.println("Error, uttag för stort");
+            }
+
+
+
 
         });
 
         // Skriver ut balance i console (vill ha ny ruta FX))
         bankomatScene.getShowButton().setOnAction(actionEvent -> {
-            List<Account> accountList = rep.getAccounts(client.getID());
-            List<Integer> balance;
             balance = accountList.stream().map(Account::getBalance).collect(Collectors.toList());
             bankomatScene.showBalance(balance);
         });
 
-        // test
+        // test output för combobox
         bankomatScene.getcBox().setOnAction(l -> {
             System.out.println("Du valde: " + bankomatScene.getcBox().getValue() + "index " +
                     bankomatScene.getcBox().getSelectionModel().getSelectedIndex());
@@ -68,11 +90,11 @@ public class BankomatSceneController {
 
 
     }
-    public void getAccounts() {
-        List<Account> accountList = rep.getAccounts(client.getID());
-        List<Integer> balance;
+    public void getAccounts(int index) {
+        accountList = rep.getAccounts(client.getID());
         balance = accountList.stream().map(Account::getBalance).collect(Collectors.toList());
-        bankomatScene.setcBox(balance);
+        bankomatScene.setcBox(balance, index);
     }
+
 }
 

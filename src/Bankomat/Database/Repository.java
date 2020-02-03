@@ -14,6 +14,19 @@ public class Repository {
         con = dbConnection.getConnection();
     }
 
+    public boolean withdrawMoney(int accId, int amount) {
+        String query = "CALL WithdrawFromAccount(?, ?)";
+        try(CallableStatement stmt = con.prepareCall(query)) {
+            stmt.setInt(1, accId);
+            stmt.setInt(2, amount);
+            stmt.execute();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
     // Lägger in konton i en lista. Tar ut accountId skickar till "getAccountById()" som returnerar Account.
     public List<Account> getAccounts (int custId) {
         List<Account> accountList = new ArrayList<>();

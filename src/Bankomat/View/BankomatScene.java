@@ -1,6 +1,7 @@
 package Bankomat.View;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -105,18 +106,23 @@ public class BankomatScene {
         });
     }
 
-    public ComboBox<String> getcBox() {
-        return cBox;
+    // Sätter värdet på combobox (Sämst på JavaFX finns säkert 100 gånger bättre sätt att göra det på)
+
+    public void setcBox(List<Integer> balance, int index) {
+        cBox.getItems().clear();
+        int count = 0;
+        ObservableList<String> testList = FXCollections.observableArrayList();
+        for(int i: balance) {
+            testList.add("Konto: " + ++count + " Pengar: " + i);
+        }
+        cBox.setItems(testList);
+        cBox.getSelectionModel().select(index);
+
     }
 
-    // Sätter värdet på combobox (Sämst på JavaFX finns säkert 100 gånger bättre sätt att göra det på)
-    public void setcBox(List<Integer> balance) {
-        int count = 0;
-        List<String> items = new ArrayList<>();
-        for(int i: balance) {
-            items.add("Konto: " + ++count + " Pengar: " + i);
-        }
-        cBox = new ComboBox<>(FXCollections.observableArrayList(items));
+
+    public ComboBox<String> getcBox() {
+        return cBox;
     }
 
     public VBox getDesignLayout() {
