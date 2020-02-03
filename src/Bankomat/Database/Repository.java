@@ -14,37 +14,28 @@ public class Repository {
         con = dbConnection.getConnection();
     }
 
+    // Lägger in konton i en lista. Tar ut accountId skickar till "getAccountById()" som returnerar Account.
     public List<Account> getAccounts (int custId) {
         List<Account> accountList = new ArrayList<>();
-        try(CallableStatement stmt = con.prepareCall("CALL bankdatabase.accountState(?, ?)")) {
+        try(CallableStatement stmt = con.prepareCall("CALL bankdatabase.accountState(?)")) {
             stmt.setInt(1, custId);
-            stmt.registerOutParameter(2, Types.INTEGER);
-            boolean checkResult = stmt.execute();
-            if(!checkResult) {
-                System.out.println("nej");
-                return accountList;
-            }
-            ResultSet rs = stmt.getResultSet();
+            ResultSet rs = stmt.executeQuery();
             while(rs.next()) {
-                accountList.add(getAccountById(stmt.getInt(2)));
-                System.out.println("yes");
+                accountList.add(getAccountById(rs.getInt("AccountId")));
             }
-            checkResult = stmt.getMoreResults();
-            if(!checkResult) {
 
-            }
-            rs = stmt.getResultSet();
-            while(rs.next()) {
-                accountList.add(getAccountById(stmt.getInt(2)));
-            }
 
         }
         catch(SQLException e) {
             e.printStackTrace();
         }
+        for(Account i: accountList) {
+            System.out.println(i);
+        }
         return accountList;
     }
 
+    // Tar accountId och skapar ett Account objekt
     public Account getAccountById(int accId) {
         Account account = null;
         String query = "SELECT AccountID, balance from bankdatabase.accounts where AccountId = ?";
@@ -62,6 +53,7 @@ public class Repository {
         return account;
     }
 
+    // Hämtar klient om Personnr stämmer med Pin.
     public Client getClient(String persNr, int pinCode) {
         Client client = null;
         try(CallableStatement stmt = con.prepareCall("CALL bankdatabase.checkCred(?, ?)")) {
@@ -78,6 +70,7 @@ public class Repository {
         return client;
     }
 
+    // Hämtar all klient info med klient id
     public Client getClientById(int custId) {
         Client client = null;
         String query = "SELECT * from bankdatabase.customer where CustomerID = ?";

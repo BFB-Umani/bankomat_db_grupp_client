@@ -56,9 +56,9 @@ public class BankomatSceneController {
             List<Account> accountList = rep.getAccounts(client.getID());
             System.out.println(accountList.size());
             int count = 0;
-            for(Account a: accountList) {
-                System.out.println("Konto " + ++count + " " + a.getBalance());
-            }
+//            for(Account a: accountList) {
+//                System.out.println("Konto " + ++count + " " + a.getBalance());
+//            }
 
             showBalance();
         });
