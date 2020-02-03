@@ -28,6 +28,7 @@ public class BankomatScene {
     private Button showButton = new Button("Konton"); // J
     private Button ok = new Button("ok");
     private Label orderLabel = new Label();
+    private Label loanLabel = new Label();
     private HBox comboBox = new HBox();
 
 
@@ -69,17 +70,20 @@ public class BankomatScene {
         showButton.setMaxWidth(Double.MAX_VALUE); // J
     }
 
-    public void showBalance(List<Integer> balance){
+    public void showBalance(List<Integer> balance, List<String> loanList){
         Stage dialogStage = new Stage();
         VBox layout = new VBox();
         HBox hBox = new HBox(orderLabel);
+        HBox loanBox = new HBox(loanLabel); // j
         HBox buttons = new HBox(ok);
         layout.getChildren().add(hBox);
+        layout.getChildren().add(loanBox);
         layout.getChildren().add(buttons);
         layout.setMinSize(400,50);
         buttons.setAlignment(Pos.BOTTOM_CENTER);
         buttons.setMinSize(300,60);
         orderLabel.setAlignment(Pos.CENTER);
+        loanLabel.setAlignment(Pos.TOP_CENTER);
 
         int count = 0;
         StringBuilder copy = new StringBuilder();
@@ -87,9 +91,12 @@ public class BankomatScene {
             copy.append("Konto : ").append(++count).append(" Pengar: ").append(i).append("\n");
         }
         orderLabel.setText(copy.toString());
-
+        for(String s: loanList) {
+            loanLabel.setText(s);
+        }
 
         hBox.setAlignment(Pos.CENTER);
+        loanBox.setAlignment(Pos.TOP_CENTER);
         ok.setPrefSize(88,45);
         buttons.setPadding(new Insets(15, 0, 10, 0));
         ok.setCursor(Cursor.HAND);

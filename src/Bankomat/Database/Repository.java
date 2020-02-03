@@ -1,7 +1,10 @@
 package Bankomat.Database;
 
 import Bankomat.Model.Account;
+import Bankomat.Model.Admin;
 import Bankomat.Model.Client;
+import Bankomat.Model.Loan;
+import com.mysql.cj.protocol.Resultset;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,6 +15,43 @@ public class Repository {
 
     public Repository() {
         con = dbConnection.getConnection();
+    }
+
+    public List<Loan> getLoans(int custId) {
+        List<Loan> loanList = new ArrayList<>();
+        String query = "SELECT * from loantocustomer " +
+                "    inner join loan l on loantocustomer.LoanID = l.LoanID" +
+                "    where CustomerID = ?;";
+        try(PreparedStatement stmt = con.prepareCall(query)) {
+            stmt.setInt(1, custId);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()) {
+                Admin admin = getAdminById(rs.getInt("admin"));
+                Loan loan = new Loan(rs.getInt("LoanID"), rs.getInt("startAmount"), rs.getInt("paidAmount"),
+                        rs.getDouble("interestRate"), rs.getDate("paymentPlan"), admin);
+                loanList.add(loan);
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return loanList;
+    }
+
+    public Admin getAdminById(int adminId) {
+        Admin admin = null;
+        String query = "SELECT * from administrator where AdministratorID = ? ;";
+        try(PreparedStatement stmt = con.prepareCall(query)){
+            stmt.setInt(1, adminId);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()) {
+                admin = new Admin(rs.getInt("AdministratorID"), rs.getString("firstname"),
+                        rs.getString("lastname"), rs.getString("personalNumber"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return admin;
     }
 
     public boolean withdrawMoney(int accId, int amount) {

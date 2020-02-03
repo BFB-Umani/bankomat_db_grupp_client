@@ -4,6 +4,7 @@ import Bankomat.Database.Repository;
 import Bankomat.Main;
 import Bankomat.Model.Account;
 import Bankomat.Model.Client;
+import Bankomat.Model.Loan;
 import Bankomat.View.BankomatScene;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,6 +19,10 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import javax.swing.*;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -75,10 +80,20 @@ public class BankomatSceneController {
 
         });
 
-        // Skriver ut balance i console (vill ha ny ruta FX))
+        // Skriver ut konton och eventuella lån.
         bankomatScene.getShowButton().setOnAction(actionEvent -> {
             balance = accountList.stream().map(Account::getBalance).collect(Collectors.toList());
-            bankomatScene.showBalance(balance);
+            List<Loan> loanList= rep.getLoans(client.getID());
+            List<String> loanStringList = new ArrayList<>();
+            int count = 0;
+            for(Loan l: loanList) {
+                double startWithInterest = (l.getStartAmount() * (l.getInterestRate()/100) + l.getStartAmount());
+                loanStringList.add("Lån:" + ++count + " Start med räntan: " + l.getInterestRate() + "% = "
+                + startWithInterest + "Summa kvar: " + (startWithInterest - l.getPaidAmount()) + " att betala");
+
+            }
+
+            bankomatScene.showBalance(balance, loanStringList);
         });
 
         // test output för combobox
