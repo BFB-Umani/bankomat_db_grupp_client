@@ -3,6 +3,7 @@ package Bankomat.Controller;
 import Bankomat.Database.Repository;
 import Bankomat.Main;
 import Bankomat.Model.Account;
+import Bankomat.Model.AccountHistory;
 import Bankomat.Model.Client;
 import Bankomat.Model.Loan;
 import Bankomat.View.BankomatScene;
@@ -96,8 +97,14 @@ public class BankomatSceneController {
             bankomatScene.showBalance(balance, loanStringList);
         });
 
+
+        // handler för historik knappen, "Se kontohistorik för den senaste månaden".
         bankomatScene.getLatestMonth().setOnAction(l -> {
-            bankomatScene.showHistory();
+            int accId = accountList.get(bankomatScene.getcBox().getSelectionModel().getSelectedIndex()).getId();
+            List<AccountHistory> accHistory = rep.getLatestHistory(client.getID(), accId);
+            List<String> outputHist = accHistory.stream().map(a ->"Före: " +  a.getBalanceBefore() + " Uttag: " + a.getWithdraw() + " Efter: " +
+                    a.getBalanceAfter() + " Datum:" + a .getDate()).collect(Collectors.toList());
+            bankomatScene.showHistory(outputHist);
         });
 
         // test output för combobox
@@ -109,6 +116,8 @@ public class BankomatSceneController {
 
 
     }
+
+    // Lägger in alla konton en kund kan ha i en lista.
     public void getAccounts(int index) {
         accountList = rep.getAccounts(client.getID());
         balance = accountList.stream().map(Account::getBalance).collect(Collectors.toList());

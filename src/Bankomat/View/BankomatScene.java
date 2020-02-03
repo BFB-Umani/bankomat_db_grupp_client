@@ -75,7 +75,7 @@ public class BankomatScene {
         latestMonth.setMaxWidth(Double.MAX_VALUE); // J
     }
 
-    public void showHistory() {
+    public void showHistory(List<String> outputHist) {
         Stage dialogStage = new Stage();
         VBox layout = new VBox();
         HBox hBox = new HBox(historyLabel);
@@ -88,7 +88,12 @@ public class BankomatScene {
         orderLabel.setAlignment(Pos.CENTER);
         loanLabel.setAlignment(Pos.TOP_CENTER);
 
-        historyLabel.setText("Hejsan allihop");
+        String outHistory = "";
+        for(String s: outputHist) {
+            outHistory += s + "\n";
+        }
+        historyLabel.setText(outHistory);
+
 
         hBox.setAlignment(Pos.CENTER);
         ok.setPrefSize(88,45);
